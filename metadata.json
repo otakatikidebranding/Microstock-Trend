@@ -1,0 +1,7 @@
+{
+  "name": "Microstock Trend & Keyword Expert",
+  "description": "Asisten AI riset tren pasar mikrostock, visual breakdown, dan generator metadata SEO untuk Adobe Stock & Shutterstock.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
