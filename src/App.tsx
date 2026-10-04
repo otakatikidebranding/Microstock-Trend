@@ -122,7 +122,16 @@ export default function App() {
         }),
       });
 
-      const resData = await response.json();
+      const rawText = await response.text();
+      let resData: any = {};
+      try {
+        resData = JSON.parse(rawText);
+      } catch {
+        if (response.status === 504) {
+          throw new Error('Permintaan memakan waktu terlalu lama (Vercel timeout). Silakan coba lagi dengan gambar yang lebih kecil.');
+        }
+        throw new Error(rawText || `Server error (${response.status})`);
+      }
 
       if (!response.ok || !resData.success) {
         throw new Error(resData.error || 'Gagal memproses analisis mikrostock.');
