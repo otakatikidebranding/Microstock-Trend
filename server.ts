@@ -1,14 +1,10 @@
 import express from "express";
 import path from "path";
-import { fileURLToPath } from "url";
-import { createServer as createViteServer } from "vite";
 import { GoogleGenAI, Type } from "@google/genai";
 import dotenv from "dotenv";
 
 dotenv.config();
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = 3000;
@@ -582,7 +578,8 @@ Formatkan output dalam JSON valid dengan struktur:
 // Vite middleware for development vs static build in production
 async function startServer() {
   if (process.env.NODE_ENV !== "production") {
-    const vite = await createViteServer({
+    const { createServer } = await import("vite");
+    const vite = await createServer({
       server: { middlewareMode: true },
       appType: "spa",
     });

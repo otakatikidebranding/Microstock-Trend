@@ -1,1 +1,15 @@
-{"version":2,"framework":"vite","rewrites":[{"source":"/api/(.*)","destination":"/api"}]}
+{
+  "version": 2,
+  "framework": "vite",
+  "functions": {
+    "api/index.ts": {
+      "maxDuration": 60
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api"
+    }
+  ]
+}
