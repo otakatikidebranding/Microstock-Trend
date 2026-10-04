@@ -51,7 +51,13 @@ export const MonthlyTrendSection: React.FC<MonthlyTrendSectionProps> = ({
           monthName: activeMonthData.monthName,
         }),
       });
-      const data = await res.json();
+      const rawText = await res.text();
+      let data: any = {};
+      try {
+        data = JSON.parse(rawText);
+      } catch {
+        throw new Error(rawText || `Server error (${res.status})`);
+      }
       if (data.success) {
         setAiForecastData(data.data);
       }
