@@ -1,10 +1,10 @@
 import express from "express";
 import path from "path";
+import { createServer as createViteServer } from "vite";
 import { GoogleGenAI, Type } from "@google/genai";
 import dotenv from "dotenv";
 
 dotenv.config();
-
 
 const app = express();
 const PORT = 3000;
@@ -276,7 +276,6 @@ Patuhi aturan kerja berikut dengan sangat disiplin:
 
     // If image is provided
     if (image && image.data) {
-      // Clean base64 data if it contains data URI prefix
       const cleanBase64 = image.data.replace(/^data:image\/[a-z0-9+]+;base64,/, "");
       const mimeType = image.mimeType || "image/jpeg";
 
@@ -301,7 +300,6 @@ ${image ? "Analisis visual dari gambar/screenshot yang saya lampirkan di atas. L
       text: userPromptText,
     });
 
-    // Model sequence: gemini-3.1-flash-lite (high availability, zero 503s), fallback to gemini-flash-latest and gemini-3.8-flash
     const candidateModels = [
       "gemini-3.1-flash-lite",
       "gemini-flash-latest",
@@ -347,7 +345,7 @@ ${image ? "Analisis visual dari gambar/screenshot yang saya lampirkan di atas. L
             await new Promise((r) => setTimeout(r, 1200));
             continue;
           }
-          break; // Switch to next model in candidate list
+          break;
         }
       }
 
@@ -481,7 +479,6 @@ app.get("/api/market-trends", (_req, res) => {
 // API Route: Monthly Microstock Trend Intelligence (12 Months Calendar)
 app.get("/api/monthly-trends", (req, res) => {
   const monthParam = req.query.month;
-  // If specific month is requested, return that month, otherwise return full 12-month summary
   res.json({
     currentMonth: new Date().getMonth() + 1,
     queryMonth: monthParam ? parseInt(monthParam as string, 10) : null,
@@ -578,8 +575,7 @@ Formatkan output dalam JSON valid dengan struktur:
 // Vite middleware for development vs static build in production
 async function startServer() {
   if (process.env.NODE_ENV !== "production") {
-    const { createServer } = await import("vite");
-    const vite = await createServer({
+    const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: "spa",
     });
@@ -597,4 +593,8 @@ async function startServer() {
   });
 }
 
-startServer();
+if (!process.env.VERCEL) {
+  startServer();
+}
+
+export default app;
